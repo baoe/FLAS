@@ -87,11 +87,13 @@ int countADDm4=0;
 void readm4()
 {
 	char ch;
-	ch=fgetc(f_ADD);
+//	ch=fgetc(f_ADD)
+//by bao: fgetc needs empty judgement before hand
+	if(f_ADD != NULL) ch=fgetc(f_ADD); else return;
 	int flag=0;
-	
+
 	while(!feof(f_ADD))
-	{	
+	{
 		if(ch==-1)
 		{
 			break;
@@ -314,7 +316,7 @@ void ReadSample()
 int main(int argc,char * argv[])
 {
 	parseargs(argc,argv);
-	
+
 	const char* filename;
 	filename=BEFORE.c_str();
 	f_BEFORE=fopen(filename,"r");
