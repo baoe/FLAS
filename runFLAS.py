@@ -101,7 +101,7 @@ FLAS: Fast and High Throughput Algorithm for PacBio Long Read Self-Correction.
 		exit(-1)
 
 #####################################
-	bronkerbosch1_command = 'python bronkerbosch.py ' + temp_dir + '/step1/' + 'allreads.fasta.m4 ' + temp_dir + '/step1/' + 'clique1.txt ' + temp_dir + '/step1/' + 'edge1.txt 3 '
+	bronkerbosch1_command = 'python ./src/bronkerbosch.py ' + temp_dir + '/step1/' + 'allreads.fasta.m4 ' + temp_dir + '/step1/' + 'clique1.txt ' + temp_dir + '/step1/' + 'edge1.txt 3 '
 
 	print ('Running command: ' + bronkerbosch1_command)
 	err = os.system(bronkerbosch1_command)
@@ -226,7 +226,7 @@ if start_from_step <= 2:
 		exit(-1)
 
 ########################################
-	bronkerbosch2_command = 'python bronkerbosch.py ' + temp_dir + '/step2/' + 'allreads0_corrected_filted1.fasta.m4 ' + temp_dir + '/step2/' + 'clique2.txt ' +  temp_dir + '/step2/' + 'edge2.txt 3'
+	bronkerbosch2_command = 'python ./src/bronkerbosch.py ' + temp_dir + '/step2/' + 'allreads0_corrected_filted1.fasta.m4 ' + temp_dir + '/step2/' + 'clique2.txt ' +  temp_dir + '/step2/' + 'edge2.txt 3'
 	print ('Running command: ' + bronkerbosch2_command)
 	err = os.system(bronkerbosch2_command)
 	if err != 0:
