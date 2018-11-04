@@ -64,6 +64,8 @@ bin:
 
 instbin:
 	$(MV) FLAS preread bronkerboschadj addm42MECATm4 separatereads modifym4file2 filter full_trim write_corrected2 bin
+#by bao: bronkerbosch.py should be put into bin
+	$(CP) src/bronkerbosch.py bin
 
 clean:
 	$(RM) src/FLAS.o src/combinecliques2.o src/preread.o src/bronkerboschadj.o src/addm42MECATm4.o  src/separatereads.o  src/modifym4file2.o  src/filter.o  src/full_trim.o src/write_corrected2.o
