@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#by bao: to let runFLAS.py use this script directly
 # Finds all maximal cliques in a graph using the Bron-Kerbosch algorithm. The input graph here is 
 # in the adjacency list format, a dict with vertexes as keys and lists of their neighbors as values.
 # https://en.wikipedia.org/wiki/Bron-Kerbosch_algorithm
