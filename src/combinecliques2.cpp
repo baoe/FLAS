@@ -45,6 +45,14 @@ vector <m4info> m4infolist2;
 void breakpoint()
 {}
 
+//by bao: readslist is converted to accelerate program
+void convert(read_list *rl, read_list *readslist)
+{
+	for(int i = 0; i < num_read; i++)
+		if(rl[i].read_name != "")
+			readslist[atoi(rl[i].read_name.c_str())] = rl[i];
+}
+
 int count_clique=0,count_cliques=0,count_read=0,count_reads=0;
 
 void init_cliquelist()
@@ -962,14 +970,18 @@ void readm4file()
 	}
 }
 
-void readsalign()
+//by bao: readslist is converted to accelerate program
+void readsalign(read_list *rl)
 {
+	read_list *readslist = new read_list[num_read];
+	convert(rl, readslist);
+
 	for(int i=0;i<m4infolist.size();i++)
 	{
-		for(int j=0;j<count_reads;j++)
-		{
-			if((m4infolist[i].readname1.compare(readslist[j].read_name)==0))
-			{
+//		for(int j=0;j<count_reads;j++)
+//		{
+//			if((m4infolist[i].readname1.compare(readslist[j].read_name)==0))
+//			{
 				m4info_node *info=new (m4info_node);
 				info->info.readname1=m4infolist[i].readname1;
 				info->info.readname2=m4infolist[i].readname2;
@@ -978,10 +990,13 @@ void readsalign()
 				info->info.start2=m4infolist[i].start2;
 				info->info.end2=m4infolist[i].end2;
 				info->info.identity=m4infolist[i].identity;
-				info->next=readslist[j].info;
-				readslist[j].info=info;
-				clique_node * cj;
-				cj=readslist[j].next;
+//				info->next=readslist[j].info;
+//				readslist[j].info=info;
+//				clique_node * cj;
+//				cj=readslist[j].next;
+				info->next=rl[readslist[atoi(m4infolist[i].readname1.c_str())].read_ID].info;
+				rl[readslist[atoi(m4infolist[i].readname1.c_str())].read_ID].info = info;
+
 				/*
 				while(cj!=NULL)
 				{
@@ -998,8 +1013,8 @@ void readsalign()
 					cj=cj->next;
 				}
 				*/
-			}
-		}
+//			}
+//		}
 	}
 }
 
@@ -1769,7 +1784,9 @@ void create_region2()
 {
 	for(int i=0 ;i<count_reads2;i++)
 	{
-		vector<int> a(readslist2[i].length/1000+1);
+//		vector<int> a(readslist2[i].length/1000+1);
+//by bao: initialization is necessary to avoid memory leak
+		vector<int> a(readslist2[i].length/1000+1, 0);
 		readslist2[i].region2=a;
 	}
 }
@@ -1880,14 +1897,18 @@ void readm4file2()
 	}
 }
 
-void ali_raw_co()
+//by bao: readslist is converted to accelerate program
+void ali_raw_co(read_list *rl)
 {
+	read_list *readslist = new read_list[num_read];
+	convert(rl, readslist);
+
 	int rawreadID=0;
 	int coreadID=0;
 	int flag_found=0;
 	for(int i=0;i<m4infolist2.size();i++)
 	{
-		
+/*		
 		flag_found=0;
 		for(int j=0;j<count_reads;j++)
 		{
@@ -1918,6 +1939,10 @@ void ali_raw_co()
 			}
 		}
 		//cout<<m4infolist2.size()<<"\t"<<i<<"\t"<<rawreadID<<"\t"<<readslist[coreadID].read_name<<endl;
+*/
+		coreadID = atoi(m4infolist2[i].readname1.c_str());
+		rawreadID = atoi(m4infolist2[i].readname2.c_str());
+
 		clique_node *c1;
 		c1=readslist[coreadID].next;
 		while(c1!=NULL)
@@ -2468,7 +2493,7 @@ void combine()
 		printreadslist();
 //		cout<<"finish printreadslist"<<endl;
 //		cout<<"count_cliques = "<<count_cliques<<endl;
-		readsalign();
+		readsalign(readslist);
 //		cout<<"finish readsalign"<<endl;
 		insert_readnum();
 //		cout<<"finish insert_readnum"<<endl;
@@ -2529,7 +2554,8 @@ void combine()
 		readm4file();
 //		cout<<"readm4file"<<endl;
 
-		readsalign();
+//by bao: readslist is converted to accelerate program
+		readsalign(readslist);
 //		cout<<"readsalign"<<endl;
 
 		combine_cliques();
@@ -2552,7 +2578,8 @@ void combine()
 		readm4file2();
 //		cout<<"readm4file2"<<endl;
 
-		ali_raw_co();
+//by bao: readslist is converted to accelerate program
+		ali_raw_co(readslist);
 //		cout<<"ali_raw_co"<<endl;
 
 		readsalign2();
