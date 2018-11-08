@@ -45,12 +45,19 @@ vector <m4info> m4infolist2;
 void breakpoint()
 {}
 
+//by bao: maybe info.readname is actually id and there is still some problem; maybe not
 //by bao: readslist is converted to accelerate program
 void convert(read_list *rl, read_list *readslist)
 {
 	for(int i = 0; i < num_read; i++)
 		if(rl[i].read_name != "")
 			readslist[atoi(rl[i].read_name.c_str())] = rl[i];
+}
+
+void convert_back(read_list *rl, read_list *readslist)
+{
+	for(int i = 0; i < num_read; i++)
+		rl[readslist[i].read_ID] = readslist[i];
 }
 
 int count_clique=0,count_cliques=0,count_read=0,count_reads=0;
@@ -970,6 +977,7 @@ void readm4file()
 	}
 }
 
+//void readsalign()
 //by bao: readslist is converted to accelerate program
 void readsalign(read_list *rl)
 {
@@ -996,6 +1004,8 @@ void readsalign(read_list *rl)
 //				cj=readslist[j].next;
 				info->next=rl[readslist[atoi(m4infolist[i].readname1.c_str())].read_ID].info;
 				rl[readslist[atoi(m4infolist[i].readname1.c_str())].read_ID].info = info;
+//				info->next = readslist[atoi(m4infolist[i].readname1.c_str())].info;
+//				readslist[atoi(m4infolist[i].readname1.c_str())].info = info;
 
 				/*
 				while(cj!=NULL)
@@ -1902,11 +1912,14 @@ void readm4file2()
 	}
 }
 
+//void ali_raw_co()
 //by bao: readslist is converted to accelerate program
 void ali_raw_co(read_list *rl)
 {
 	read_list *readslist = new read_list[num_read];
 	convert(rl, readslist);
+//	read_list *readslist2 = new read_list[num_read];
+//	convert(rl2, readslist2);
 
 	int rawreadID=0;
 	int coreadID=0;
@@ -1946,6 +1959,7 @@ void ali_raw_co(read_list *rl)
 		//cout<<m4infolist2.size()<<"\t"<<i<<"\t"<<rawreadID<<"\t"<<readslist[coreadID].read_name<<endl;
 */
 		coreadID = atoi(m4infolist2[i].readname1.c_str());
+		if(readslist[coreadID].read_ID == 0) continue;
 		rawreadID = atoi(m4infolist2[i].readname2.c_str());
 
 		clique_node *c1;
@@ -2006,6 +2020,8 @@ void ali_raw_co(read_list *rl)
 		info->next=readslist2[rawreadID].info;
 		readslist2[rawreadID].info=info;
 	}
+
+//	convert_back(rl2, readslist2);
 }
 
 void insertflag_readslist2()
@@ -2031,6 +2047,7 @@ void insertflag_readslist2()
 	//cout<<count_flag<<endl;
 }
 
+//by bao: m4infolist should be 2
 void readsalign2()
 {
 	/*
@@ -2063,7 +2080,7 @@ void readsalign2()
 		}
 	}
 	*/
-	for(int i=0;i<m4infolist.size();i++)
+	for(int i=0;i<m4infolist2.size();i++)
 	{
 		if(i%100==0)
 		{
@@ -2078,15 +2095,16 @@ void readsalign2()
 			//if(m4infolist[i].readname2.compare(readslist[j].read_name)==0)
 			{
 				m4info_node *info=new (m4info_node);
-				info->info.readname1=m4infolist[i].readname1;
-				info->info.readname2=m4infolist[i].readname2;
-				info->info.start1=m4infolist[i].start1;
-				info->info.end1=m4infolist[i].end1;
-				info->info.start2=m4infolist[i].start2;
-				info->info.end2=m4infolist[i].end2;
-				info->info.identity=m4infolist[i].identity;
+				info->info.readname1=m4infolist2[i].readname1;
+				info->info.readname2=m4infolist2[i].readname2;
+				info->info.start1=m4infolist2[i].start1;
+				info->info.end1=m4infolist2[i].end1;
+				info->info.start2=m4infolist2[i].start2;
+				info->info.end2=m4infolist2[i].end2;
+				info->info.identity=m4infolist2[i].identity;
 				info->next=readslist2[j].info;
 				readslist2[j].info=info;
+cout << readslist2[j].read_ID << "::: " << j << "::: " << m4infolist2[i].readname2 << endl;
 				clique_node * cj;
 				cj=readslist2[j].next;
 				while(cj!=NULL)
@@ -2277,7 +2295,6 @@ void HASAL2()
 				{
 					if(m->info.readname1.compare(r->read.c_str())==0&&readslist2[r->read_ID].flag>=100)
 					{
-
 					}
 					else
 					{
@@ -2315,6 +2332,8 @@ void HASAL2()
 								//count_delete++;
 								//deletepairlist.push_back(d);
 								foutdelete<<m->info.readname1.c_str()<<" "<<m->info.readname2.c_str()<<endl;
+//by bao: continue to next read is necesarry
+								goto cont;
 							}
 						}
 					}
@@ -2322,7 +2341,7 @@ void HASAL2()
 				}
 				m=m->next;
 			}
-
+cont:;
 			
 		}
 	}
@@ -2497,6 +2516,8 @@ void combine()
 		printreadslist();
 //		cout<<"finish printreadslist"<<endl;
 //		cout<<"count_cliques = "<<count_cliques<<endl;
+//		readsalign();
+////by bao: readslist is converted to accelerate program
 		readsalign(readslist);
 //		cout<<"finish readsalign"<<endl;
 		insert_readnum();
@@ -2558,6 +2579,7 @@ void combine()
 		readm4file();
 //		cout<<"readm4file"<<endl;
 
+//		readsalign();
 //by bao: readslist is converted to accelerate program
 		readsalign(readslist);
 //		cout<<"readsalign"<<endl;
@@ -2582,6 +2604,7 @@ void combine()
 		readm4file2();
 //		cout<<"readm4file2"<<endl;
 
+//		ali_raw_co();
 //by bao: readslist is converted to accelerate program
 		ali_raw_co(readslist);
 //		cout<<"ali_raw_co"<<endl;
@@ -2593,7 +2616,7 @@ void combine()
 //		cout<<"insertflag_readslist2"<<endl;
 
 		//printreadslist2();
-//		HASAL2();
+		HASAL2();
 //		cout<<"HASAL2"<<endl;
 
 		free_memory();
