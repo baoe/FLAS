@@ -2104,7 +2104,6 @@ void readsalign2()
 				info->info.identity=m4infolist2[i].identity;
 				info->next=readslist2[j].info;
 				readslist2[j].info=info;
-cout << readslist2[j].read_ID << "::: " << j << "::: " << m4infolist2[i].readname2 << endl;
 				clique_node * cj;
 				cj=readslist2[j].next;
 				while(cj!=NULL)
