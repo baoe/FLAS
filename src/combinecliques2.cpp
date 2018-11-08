@@ -1763,7 +1763,9 @@ void create_readslist2()
 				count++;
 				if(ch=='\n')
 				{
-					readslist2[count_reads2].length=count;
+//					readslist2[count_reads2].length=count;
+//by bao: index is adjusted
+					readslist2[count_reads2 - 1].length=count;
 					count=0;
 					break;
 				}
@@ -1777,6 +1779,9 @@ void create_readslist2()
 		ch= fgetc(f_read);
 
 	}
+//by bao: last read length is stored
+	readslist2[count_reads2 - 1].length=count;
+
 	fclose(f_read);
 }
 
@@ -2000,7 +2005,6 @@ void ali_raw_co(read_list *rl)
 		info->info.identity=m4infolist2[i].identity;
 		info->next=readslist2[rawreadID].info;
 		readslist2[rawreadID].info=info;
-		
 	}
 }
 
@@ -2589,7 +2593,7 @@ void combine()
 //		cout<<"insertflag_readslist2"<<endl;
 
 		//printreadslist2();
-		HASAL2();
+//		HASAL2();
 //		cout<<"HASAL2"<<endl;
 
 		free_memory();
