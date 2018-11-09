@@ -237,7 +237,8 @@ if start_from_step <= 2:
 	
 
 	FN1_command = temp_dir + '/step1/' + 'allreads0_corrected_filted1.fasta'
-	print ('Running command: ' + FN1_command)
+#	print ('Running command: ' + FN1_command)
+#by bao: not a command
 	contents=open(FN1_command,"r").read()
 	FN1= contents.count("\n")
 	 
