@@ -32,6 +32,8 @@ for line in fin:
  # if string.atoi(line.split("\t")[0]) not in graph[string.atoi(line.split("\t")[1])]:  
   #  graph[string.atoi(line.split("\t")[1])].append(string.atoi(line.split("\t")[0]))
   linenum+=1
+  #by bao: this will be parallelized in updated versions to exam all alignments
+  if linenum > 1000000: break
   #if linenum%1000 == 0 :
    # print(linenum)
 
