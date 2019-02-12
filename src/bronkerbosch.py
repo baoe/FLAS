@@ -22,6 +22,13 @@ graphh = {
 fin = open(argv[1],'r')
 graph = defaultdict(list)
 linenum = 0
+
+#by bao: numline counts number of alignments
+numline = 0
+for line in fin:
+  numline+=1
+fin.seek(0)
+
 for line in fin:
   if int(line.split("\t")[1]) not in graph[int(line.split("\t")[0])]:
     graph[int(line.split("\t")[0])].append(int(line.split("\t")[1]))
@@ -32,8 +39,10 @@ for line in fin:
  # if string.atoi(line.split("\t")[0]) not in graph[string.atoi(line.split("\t")[1])]:  
   #  graph[string.atoi(line.split("\t")[1])].append(string.atoi(line.split("\t")[0]))
   linenum+=1
-  if linenum > 5000000: break
-  #by bao: this will be parallelized in updated versions to exam all alignments
+
+#by bao: linenum samples the alignments, and multiple samples forming all the alignments will be processed in parallel in updated versions
+  if linenum > numline/int(argv[4])*5: break
+
   #if linenum%1000 == 0 :
    # print(linenum)
 
